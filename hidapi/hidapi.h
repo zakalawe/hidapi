@@ -684,6 +684,18 @@ extern "C" {
 		*/
 		HID_API_EXPORT const char* HID_API_CALL hid_version_str(void);
 
+        /** @brief Get the HID descriptor from the device
+
+            @ingroup API
+            @param device A device handle returned from hid_open().
+            @param data A buffer to put the descriptor data into.
+            @param length The size of the buffer
+
+            @returns
+                This function returns the actual number of bytes read and
+                -1 on error.
+        */
+        int  HID_API_EXPORT HID_API_CALL hid_get_descriptor(hid_device *device, unsigned char *data, size_t length);
 #ifdef __cplusplus
 }
 #endif

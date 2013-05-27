@@ -1445,3 +1445,39 @@ HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
 		return L"Success";
 	return last_global_error_str;
 }
+
+int  HID_API_EXPORT_CALL hid_get_descriptor(hid_device *dev, unsigned char *data, size_t length)
+{
+    int res;
+    unsigned int desc_size = 0;
+    struct hidraw_report_descriptor rpt_desc;
+
+    memset(&rpt_desc, 0x0, sizeof(rpt_desc));
+
+    /* Get Report Descriptor Size */
+    res = ioctl(dev->device_handle, HIDIOCGRDESCSIZE, &desc_size);
+    if (res < 0) {
+        perror("HIDIOCGRDESCSIZE");
+        return -1;
+    }
+
+    // call with NULL buffer / 0 length to query size only
+    if ((data == NULL) || (length == 0))
+        return desc_size;
+
+    if (length < desc_size) {
+        perror("hid_get_descriptor: insufficent space for descriptor");
+        return -1;
+    }
+
+    /* Get Report Descriptor */
+    rpt_desc.size = desc_size;
+    res = ioctl(dev->device_handle, HIDIOCGRDESC, &rpt_desc);
+    if (res < 0) {
+        perror("HIDIOCGRDESC");
+        return -1;
+    }
+
+    memcpy(data, rpt_desc.value, desc_size);
+    return desc_size;
+}

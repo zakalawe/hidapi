@@ -39,7 +39,7 @@ if OS_WINDOWS
 SUBDIRS += windows
 endif
 
-SUBDIRS += hidtest
+SUBDIRS += hidtest hidparser
 
 if BUILD_TESTGUI
 SUBDIRS += testgui

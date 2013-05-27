@@ -248,6 +248,7 @@ AC_SUBST(LTLDFLAGS)
 
 AC_CONFIG_FILES([Makefile \
 	hidtest/Makefile \
+    hidparser/Makefile \
 	libusb/Makefile \
 	linux/Makefile \
 	mac/Makefile \

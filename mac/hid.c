@@ -1593,3 +1593,23 @@ HID_API_EXPORT const wchar_t * HID_API_CALL  hid_error(hid_device *dev)
 		return L"Success";
 	return last_global_error_str;
 }
+
+
+int HID_API_EXPORT hid_get_descriptor(hid_device *dev, unsigned char *data, size_t length)
+{
+    /* Return if the device has been unplugged. */
+    if (dev->disconnected)
+        return -1;
+
+    CFTypeRef ref;
+    ref = IOHIDDeviceGetProperty(dev->device_handle, CFSTR(kIOHIDReportDescriptorKey));
+    if (ref) {
+        CFIndex len = CFDataGetLength(ref);
+        if (length < len) len = length;
+        CFDataGetBytes(ref, CFRangeMake(0,len), data);
+        return len;
+    }
+
+    return -1;
+}
+
