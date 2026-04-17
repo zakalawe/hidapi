@@ -1,13 +1,13 @@
 /*******************************************************
  Demo Program for HIDAPI
- 
+
  Alan Ott
  Signal 11 Software
 
  2010-07-20
 
  Copyright 2010, All Rights Reserved
- 
+
  This contents of this file may be used by anyone
  for any reason without any conditions and may be
  used as a starting point for your own applications
@@ -61,10 +61,10 @@ static QString formatDevice(struct hid_device_info *device_info)
 
 class MainWindow : public QMainWindow {
 	Q_OBJECT
-	
+
 public:
 
-	
+
 private:
 	QListWidget *device_list;
     QPushButton *connect_button;
@@ -94,7 +94,7 @@ public:
 	~MainWindow();
 
     void create();
-private slots:	
+private slots:
 	long onConnect();
 	long onDisconnect();
 	long onRescan();
@@ -244,12 +244,12 @@ MainWindow::create()
 	show();
 
 	onRescan();
-	
+
 
 #ifdef __APPLE__
 //	init_apple_message_system();
 #endif
-	
+
 	//getApp()->addTimeout(this, ID_MAC_TIMER,
 	//	50 * timeout_scalar /*50ms*/);
 }
@@ -259,7 +259,7 @@ MainWindow::onConnect()
 {
 	if (connected_device != NULL)
 		return 1;
-	
+
     QListWidgetItem *item = device_list->currentItem();
 	if (!item)
 		return -1;
@@ -280,13 +280,13 @@ MainWindow::onConnect()
     }
 
     connected_device =  hid_open_path(devicePath.toLatin1().constData());
-	
+
 	if (!connected_device) {
         QMessageBox::critical(this, "Device Error",
                               tr("Unable To Connect to Device at %1").arg(devicePath));
 		return -1;
 	}
-	
+
 	hid_set_nonblocking(connected_device, 1);
 
     timer.start();
@@ -325,11 +325,11 @@ MainWindow::onRescan()
 	struct hid_device_info *cur_dev;
 
     device_list->clear();
-	
+
 	// List the Devices
 	hid_free_enumeration(devices);
 	devices = hid_enumerate(0x0, 0x0);
-	cur_dev = devices;	
+	cur_dev = devices;
 	while (cur_dev) {
 		// Add it to the List Box.
         QString s = formatDevice(cur_dev);
@@ -356,7 +356,7 @@ MainWindow::onRescan()
 QByteArray
 MainWindow::getDataFromTextField(QLineEdit *tf)
 {
-    QRegExp delim("\\W");
+    QRegularExpression delim("\\W");
     QString data = tf->text();
     QByteArray result;
 
@@ -412,7 +412,7 @@ MainWindow::onSendOutputReport()
                               tr("Could not write to device. Error reported was: %1").
                               arg(QString::fromWCharArray(hid_error(connected_device))));
 	}
-	
+
 	return 1;
 }
 
@@ -464,7 +464,7 @@ MainWindow::onGetFeatureReport()
         input_text->setText(s);
     //	input_text->setBottomLine(INT_MAX);
 	}
-	
+
 	return 1;
 }
 
@@ -481,7 +481,7 @@ MainWindow::onTimeout()
     QByteArray buf;
     buf.resize(256);
     int res = hid_read(connected_device, (unsigned char*) buf.data(), buf.size());
-	
+
 	if (res > 0) {
 		QString s(tr("Received %1 bytes:\n").arg(res));
         buf.truncate(res);
@@ -504,7 +504,7 @@ MainWindow::onMacTimeout()
 {
 #ifdef __APPLE__
     //check_apple_events();
-	
+
     //getApp()->addTimeout(this, ID_MAC_TIMER,
     //	50 * timeout_scalar /*50ms*/);
 #endif

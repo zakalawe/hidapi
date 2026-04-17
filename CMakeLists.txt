@@ -92,6 +92,11 @@ if(HIDAPI_BUILD_HIDTEST)
     add_subdirectory(hidtest)
 endif()
 
+option(HIDAPI_BUILD_GUI "Build small GUI test application guis" OFF)
+if (HIDAPI_BUILD_GUI)
+    add_subdirectory(testgui)
+endif()
+
 if(HIDAPI_ENABLE_ASAN)
     if(NOT MSVC)
         # MSVC doesn't recognize those options, other compilers - requiring it
